@@ -2,78 +2,77 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <title>Anusual Flow — To-Do & Lavori</title>
+  <title>Anusual Flow — To-Do & Lavori effettuati</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg1:#0e101a; --bg2:#101a2a; --bg3:#0f172a;
-      --grad1:#0f172a; --grad2:#0b1220; --grad3:#0a0f1a;
-      --glass:rgba(255,255,255,.06); --border:rgba(255,255,255,.12);
-      --muted:#95a0b8; --text:#e8ecf1; --accent:#6ee7b7; --accent2:#60a5fa;
-      --danger:#ff6b6b; --amber:#fbbf24; --green:#34d399;
+    :root{
+      --bg:#f6f7fb; --card:#ffffff; --muted:#6b7280; --text:#0b1220;
+      --border:#e5e7eb; --shadow:0 10px 30px rgba(0,0,0,.06);
+      --gradA:#6366f1; --gradB:#22c55e; --gradC:#60a5fa;
+      --accent:#2563eb; --accent-weak:#eef2ff;
+      --danger:#ef4444; --amber:#f59e0b; --green:#10b981;
     }
     *{box-sizing:border-box}
     body{
-      margin:0; color:var(--text); font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
-      background: radial-gradient(1200px 800px at -10% -20%, #12213a 0%, transparent 60%),
-                  radial-gradient(1000px 600px at 110% 10%, #1a2e3f 0%, transparent 55%),
-                  linear-gradient(160deg, var(--grad1), var(--grad2), var(--grad3));
-      background-attachment: fixed;
+      margin:0; color:var(--text); font:14px/1.45 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1200px 800px at -10% -10%, rgba(99,102,241,.10) 0%, transparent 60%),
+        radial-gradient(1200px 800px at 110% 10%, rgba(96,165,250,.10) 0%, transparent 55%),
+        linear-gradient(180deg,#fff, var(--bg));
+      min-height:100dvh;
     }
     header{
-      position:sticky; top:0; z-index:10;
-      display:flex; gap:12px; align-items:center; padding:14px 18px;
-      backdrop-filter:saturate(140%) blur(10px);
-      background:linear-gradient( to right, rgba(16,24,40,.65), rgba(15,23,42,.35) );
+      position:sticky; top:0; z-index:10; display:flex; gap:12px; align-items:center;
+      padding:14px 18px; background:rgba(255,255,255,.85); backdrop-filter:blur(8px);
       border-bottom:1px solid var(--border);
     }
-    header h1{margin:0; font-size:18px; font-weight:800; letter-spacing:.3px}
+    header h1{margin:0; font-size:18px; font-weight:800; letter-spacing:.2px;
+      background:linear-gradient(90deg, var(--gradA), var(--gradC), var(--gradB));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
     .spacer{flex:1}
-    .wrap{display:grid; grid-template-columns:320px 1fr; gap:16px; padding:16px}
+    .wrap{display:grid; grid-template-columns:340px 1fr; gap:16px; padding:16px}
     @media (max-width: 1024px){ .wrap{grid-template-columns:1fr} }
     .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border); border-radius:16px; padding:14px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.05);
+      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow)
     }
     .card h2{margin:0 0 10px 0; font-size:15px}
-    .pill{display:inline-flex;align-items:center;gap:6px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); font-size:12px}
-    .pill.green{color:#b5f7d2; border-color:#2f6b58; background:rgba(16,36,30,.6)}
-    .pill.amber{color:#ffe5a8; border-color:#6b5e2f; background:rgba(37,31,16,.6)}
-    .pill.red{color:#ffc1c1; border-color:#6b2f2f; background:rgba(37,16,16,.6)}
     label{display:block; margin:8px 0 4px; color:var(--muted); font-size:12px}
     input, select, textarea{
-      width:100%; background:rgba(255,255,255,.04); color:var(--text);
-      border:1px solid var(--border); border-radius:10px; padding:9px 10px;
+      width:100%; background:#fff; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:10px;
     }
     textarea{min-height:84px; resize:vertical}
     .row{display:flex; gap:8px; align-items:center}
     .row > *{flex:1}
     .btn{
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border); color:var(--text); border-radius:10px; padding:8px 10px; cursor:pointer
+      background:linear-gradient(180deg,#fff,#f4f6ff); border:1px solid var(--border); color:var(--text);
+      border-radius:10px; padding:9px 12px; cursor:pointer
     }
-    .btn:hover{filter:brightness(1.08)}
-    .btn.primary{background:linear-gradient(180deg,#1b2a3f,#132132); border-color:#2b4868}
-    .btn.accent{background:linear-gradient(180deg,#0e2e25,#0b251e); border-color:#1e6d55}
-    .btn.ghost{background:transparent; border-color:var(--border); color:var(--muted)}
-    .btn.danger{background:linear-gradient(180deg,#3a1717,#2b1111); border-color:#6a2121; color:#ffbbbb}
+    .btn:hover{filter:brightness(1.02)}
+    .btn.primary{
+      background:linear-gradient(90deg, var(--gradA), var(--gradC));
+      color:#fff; border:0;
+    }
+    .btn.ghost{background:#fff; border:1px dashed var(--border); color:var(--muted)}
+    .btn.danger{background:#fff; border-color:#fecaca; color:#b91c1c}
     .list{display:flex; flex-direction:column; gap:10px}
-    .item{border:1px solid var(--border); border-radius:14px; padding:12px; display:grid; grid-template-columns:1fr auto; gap:8px; background:rgba(255,255,255,.02)}
-    .tag{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:12px; color:#b9c5e3}
-    .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
-    .kpi{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid var(--border); border-radius:14px; padding:12px}
+    .item{border:1px solid var(--border); border-radius:12px; padding:12px; display:grid; grid-template-columns:1fr auto; gap:8px; background:#fff}
+    .tag{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:999px; padding:2px 8px; font-size:12px; background:var(--accent-weak); color:#334155}
+    .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+    .kpi{background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; box-shadow:var(--shadow)}
     .soft{color:var(--muted)}
     .toolbar{display:flex; gap:8px; flex-wrap:wrap}
     .divider{height:1px; background:var(--border); margin:10px 0}
-    .muted{color:#95a0b8}
+    .muted{color:var(--muted)}
     .srch{display:flex; gap:8px; flex-wrap:wrap}
     .nowrap{white-space:nowrap}
     .right-col{display:grid; gap:16px}
-    .avatar{width:22px; height:22px; border-radius:50%; display:inline-grid; place-items:center; background:rgba(255,255,255,.05); border:1px solid var(--border); font-size:12px}
+    .avatar{width:22px; height:22px; border-radius:50%; display:inline-grid; place-items:center; background:#f3f4f6; border:1px solid var(--border); font-size:12px}
     .fileline{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-    .badge{display:inline-flex;gap:6px;align-items:center;padding:2px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;background:rgba(255,255,255,.03)}
-    .chip{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:999px;border:1px dashed var(--border);font-size:12px;color:#c9d5f3}
+    .pill{display:inline-flex;align-items:center;gap:6px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); font-size:12px}
+    .pill.green{color:#065f46; background:#d1fae5}
+    .pill.amber{color:#92400e; background:#fef3c7}
+    .pill.red{color:#991b1b; background:#fee2e2}
   </style>
 </head>
 <body>
@@ -112,10 +111,13 @@
       <div class="row">
         <div>
           <label>Priorità</label>
-          <select id="todo_priority"><option value="normale">Normale</option><option value="alta">Alta</option><option value="critica">Critica</option></select>
+          <select id="todo_priority">
+            <option value="non_urgente">non urgente</option>
+            <option value="urgente">urgente</option>
+          </select>
         </div>
         <div>
-          <label>Assegnatario (opz.)</label>
+          <label>Assegna a (opz.)</label>
           <select id="todo_assignee"></select>
         </div>
       </div>
@@ -135,7 +137,7 @@
 
       <div class="divider"></div>
 
-      <h3 class="muted">Team creativi (per notifiche)</h3>
+      <h3 class="muted">Team creativi (notifiche)</h3>
       <label>Nome</label><input id="t_name" placeholder="Es. Giulia B."/>
       <div class="row">
         <div><label>Telefono (WhatsApp)</label><input id="t_phone" placeholder="es. 3931234567"/></div>
@@ -157,22 +159,17 @@
           <div class="kpi"><div class="muted">To-Do aperti</div><div id="kpi_open" style="font-size:22px">0</div></div>
           <div class="kpi"><div class="muted">In carico</div><div id="kpi_taken" style="font-size:22px">0</div></div>
           <div class="kpi"><div class="muted">Completati</div><div id="kpi_done" style="font-size:22px">0</div></div>
-          <div class="kpi"><div class="muted">Ore loggate (periodo)</div><div id="kpi_hours" style="font-size:22px">0</div></div>
         </div>
       </section>
 
       <section class="card">
-        <h2>Ricerca / Fatturazione</h2>
+        <h2>Ricerca</h2>
         <div class="srch">
           <input id="search" placeholder="Cerca titolo/brief/cliente"/>
           <select id="f_client"></select>
-          <input id="f_from" type="date" title="Da (data lavoro svolto)"/>
-          <input id="f_to" type="date" title="A (data lavoro svolto)"/>
+          <input id="f_from" type="date" title="Da (data completamento)"/>
+          <input id="f_to" type="date" title="A (data completamento)"/>
           <button class="btn" id="resetFilters">Reset</button>
-          <button class="btn" id="exportCSV">Export CSV</button>
-        </div>
-        <div class="soft" style="margin-top:6px">
-          Suggerimento: per le fatture mensili, imposta cliente e periodo. La tabella “Lavoro effettuato” sotto mostrerà ore e valore: i totali sono nella sezione **Fatturazione** in fondo.
         </div>
       </section>
 
@@ -182,46 +179,8 @@
       </section>
 
       <section class="card">
-        <h2>Lavoro effettuato (log)</h2>
-        <div class="row">
-          <div><label>Aggiungi lavoro manuale (creativi)</label></div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Cliente</label><select id="mw_client"></select>
-          </div>
-          <div>
-            <label>Data lavoro</label><input id="mw_date" type="date"/>
-          </div>
-          <div>
-            <label>Ore</label><input id="mw_hours" type="number" step="0.25" min="0"/>
-          </div>
-          <div>
-            <label>Valore €</label><input id="mw_value" type="number" step="0.01" min="0"/>
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <label>Titolo</label><input id="mw_title" placeholder="Attività svolta"/>
-          </div>
-          <div>
-            <label>Creativo</label><select id="mw_assignee"></select>
-          </div>
-        </div>
-        <label>Note</label><textarea id="mw_info" placeholder="Dettagli, link…"></textarea>
-        <div class="toolbar">
-          <button class="btn accent" id="mw_add">Aggiungi al log</button>
-        </div>
-        <div class="divider"></div>
-        <div class="list" id="workList"></div>
-      </section>
-
-      <section class="card">
-        <h2>Fatturazione</h2>
-        <div id="billingTotals" class="row">
-          <div class="kpi" style="flex:1"><div class="muted">Ore periodo (filtrate)</div><div id="bt_hours" style="font-size:22px">0</div></div>
-          <div class="kpi" style="flex:1"><div class="muted">Valore periodo (filtrato)</div><div id="bt_value" style="font-size:22px">€ 0,00</div></div>
-        </div>
+        <h2>Lavori effettuati</h2>
+        <div class="list" id="doneList"></div>
       </section>
 
       <section class="card">
@@ -232,61 +191,43 @@
   </div>
 
   <script>
-  // ——— Mini “DB”: localStorage (dati) + IndexedDB (file) ———
+  // ===== Mini “DB” =====
   const DB = {
-    key:'aflow.v1',
-    get(){ try { return JSON.parse(localStorage.getItem(this.key)) || { clients:[], todos:[], work:[], team:[] }; } catch { return { clients:[], todos:[], work:[], team:[] }; } },
+    key:'aflow.v2',
+    get(){ try { return JSON.parse(localStorage.getItem(this.key)) || { clients:[], todos:[], done:[], team:[] }; } catch { return { clients:[], todos:[], done:[], team:[] }; } },
     set(d){ localStorage.setItem(this.key, JSON.stringify(d)); }
   };
   const uid = () => Math.random().toString(36).slice(2,10);
   const today = () => new Date().toISOString().slice(0,10);
-  const currency = (n)=> (n||0).toLocaleString('it-IT',{style:'currency',currency:'EUR'});
 
-  // file blobs in IndexedDB
-  const FileDB = (()=>{ const DB_NAME='aflow_files', STORE='files'; let db;
-    function open(){ return new Promise((res,rej)=>{ const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE); r.onsuccess=()=>{db=r.result;res();}; r.onerror=()=>rej(r.error); });}
-    async function put(id, blob){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).put(blob,id); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });}
-    async function get(id){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readonly'); const r=tx.objectStore(STORE).get(id); r.onsuccess=()=>res(r.result||null); r.onerror=()=>rej(r.error); });}
-    async function del(id){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).delete(id); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });}
-    return { put, get, del };
-  })();
-
-  // ——— Stato ———
   let state = DB.get();
-
-  // ——— Shortcuts ———
   const $ = (s)=>document.querySelector(s);
 
-  // ——— Team utils ———
-  function normalizePhone(p){ return (p||'').replace(/[^0-9]/g,''); } // per wa.me
-
-  // ——— UI Populate ———
-  function refreshClientOptions(){
-    const opts = state.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-    $('#todo_client').innerHTML = `<option value="">— Cliente —</option>` + opts;
-    $('#f_client').innerHTML = `<option value="">Cliente: tutti</option>` + opts;
-    $('#mw_client').innerHTML = `<option value="">— Cliente —</option>` + opts;
-  }
-  function refreshTeamOptions(){
-    const opts = state.team.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-    $('#todo_assignee').innerHTML = `<option value="">— Assegna (opz.) —</option>` + opts;
-    $('#mw_assignee').innerHTML = `<option value="">— Seleziona —</option>` + opts;
-  }
-
+  function normalizePhone(p){ return (p||'').replace(/[^0-9]/g,''); }
   function clientName(id){ return state.clients.find(c=>c.id===id)?.name || '—'; }
   function teamById(id){ return state.team.find(t=>t.id===id) || null; }
   function assigneeChip(w){ return w ? `<span class="avatar" title="${w}">${w.slice(0,2).toUpperCase()}</span> ${w}` : '<span class="muted">non assegnato</span>'; }
 
-  // ——— KPI ———
+  // ===== UI Populate =====
+  function refreshClientOptions(){
+    const opts = state.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    $('#todo_client').innerHTML = `<option value="">— Cliente —</option>` + opts;
+    $('#f_client').innerHTML = `<option value="">Cliente: tutti</option>` + opts;
+  }
+  function refreshTeamOptions(){
+    const opts = state.team.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+    $('#todo_assignee').innerHTML = `<option value="">— Assegna (opz.) —</option>` + opts;
+  }
+
+  // ===== KPI =====
   function kpis(){
     const open = state.todos.filter(t=>t.status==='open').length;
     const taken = state.todos.filter(t=>t.status==='taken').length;
-    const done = state.todos.filter(t=>t.status==='done').length;
-    const hours = filteredWork().reduce((s,w)=> s + (Number(w.hours)||0), 0);
-    $('#kpi_open').textContent=open; $('#kpi_taken').textContent=taken; $('#kpi_done').textContent=done; $('#kpi_hours').textContent=hours.toFixed(1);
+    const done = state.done.length;
+    $('#kpi_open').textContent=open; $('#kpi_taken').textContent=taken; $('#kpi_done').textContent=done;
   }
 
-  // ——— Filtri globali per Fatturazione/Ricerca ———
+  // ===== Filtri globali (per le liste) =====
   function currentFilters(){
     return {
       q: ($('#search').value||'').toLowerCase(),
@@ -295,23 +236,8 @@
       to: $('#f_to').value || ''
     };
   }
-  function filteredWork(){
-    const f=currentFilters();
-    let items = [...state.work];
-    if(f.q) items = items.filter(w =>
-      (w.title||'').toLowerCase().includes(f.q) ||
-      (w.info||'').toLowerCase().includes(f.q) ||
-      clientName(w.clientId).toLowerCase().includes(f.q) ||
-      (w.assignee||'').toLowerCase().includes(f.q)
-    );
-    if(f.client) items = items.filter(w => w.clientId===f.client);
-    if(f.from) items = items.filter(w => w.dateWorked && w.dateWorked >= f.from);
-    if(f.to) items = items.filter(w => w.dateWorked && w.dateWorked <= f.to);
-    items.sort((a,b)=> (b.dateWorked||'').localeCompare(a.dateWorked||''));
-    return items;
-  }
 
-  // ——— Render Team ———
+  // ===== Render Clienti/Team =====
   function renderTeam(){
     refreshTeamOptions();
     const el = $('#teamList'); el.innerHTML='';
@@ -320,7 +246,6 @@
       div.innerHTML = `
         <div>
           <div style="display:flex;gap:8px;align-items:center">
-            <span class="chip">Creativo</span>
             <strong>${t.name}</strong>
           </div>
           <div class="soft">${t.phone ? '📱 ' + t.phone : ''} ${t.email ? ' · ✉️ ' + t.email : ''}</div>
@@ -328,8 +253,7 @@
         <div class="toolbar">
           <button class="btn" data-edit="${t.id}">Modifica</button>
           <button class="btn danger" data-del="${t.id}">Elimina</button>
-        </div>
-      `;
+        </div>`;
       div.querySelector('[data-del]').onclick = ()=>{ state.team = state.team.filter(x=>x.id!==t.id); save(); render(); };
       div.querySelector('[data-edit]').onclick = ()=>{
         const name = prompt('Nome', t.name); if(name===null) return;
@@ -341,7 +265,6 @@
     });
   }
 
-  // ——— Render Clienti ———
   function renderClients(){
     refreshClientOptions();
     const el = $('#clientList'); el.innerHTML='';
@@ -371,7 +294,15 @@
     });
   }
 
-  // ——— Allegati ———
+  // ===== Allegati (IndexedDB) =====
+  const FileDB = (()=>{ const DB_NAME='aflow_files_v2', STORE='files'; let db;
+    function open(){ return new Promise((res,rej)=>{ const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE); r.onsuccess=()=>{db=r.result;res();}; r.onerror=()=>rej(r.error); });}
+    async function put(id, blob){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).put(blob,id); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });}
+    async function get(id){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readonly'); const r=tx.objectStore(STORE).get(id); r.onsuccess=()=>res(r.result||null); r.onerror=()=>rej(r.error); });}
+    async function del(id){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).delete(id); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });}
+    return { put, get, del };
+  })();
+
   async function renderAttachedFiles(record, container){
     container.innerHTML = '';
     for(const f of (record.files||[])){
@@ -389,7 +320,7 @@
     fileInput.value=''; return stored;
   }
 
-  // ——— To-Do: render/azioni ———
+  // ===== To-Do =====
   function statusPill(todo){
     const overdue = todo.status!=='done' && todo.due && todo.due < today();
     if(todo.status==='done') return '<span class="pill green">✅ consegnato</span>';
@@ -400,7 +331,7 @@
 
   function renderTodos(){
     const el = $('#todoList'); el.innerHTML='';
-    const f=currentFilters(); // usa Q e cliente per filtro base
+    const f = currentFilters();
     let items = state.todos.filter(t=>t.status!=='done');
     if(f.q) items = items.filter(t =>
       t.title.toLowerCase().includes(f.q) ||
@@ -427,50 +358,38 @@
               ${statusPill(t)}
               <div class="soft nowrap">Scadenza: ${t.due||'—'}</div>
               <div class="soft nowrap">Assegnato: ${assigneeChip(assigneeName)}</div>
+              <div class="soft nowrap">Priorità: ${t.priority==='urgente'?'🔥 urgente':'🙂 non urgente'}</div>
             </div>
           </div>
         </div>
         <div class="toolbar">
           <button class="btn" data-take="${t.id}">Prendi in carico</button>
           <button class="btn" data-assign="${t.id}">Assegna a…</button>
-          <button class="btn accent" data-notify="${t.id}">Notifica</button>
           <button class="btn" data-done="${t.id}">Spunta verde (consegna)</button>
           <button class="btn" data-edit="${t.id}">Modifica</button>
           <button class="btn danger" data-del="${t.id}">Elimina</button>
         </div>`;
       renderAttachedFiles(t, div.querySelector(`#files-${t.id}`));
 
-      // azioni
       div.querySelector('[data-take]').onclick = ()=>{
         t.status='taken';
-        if(!t.assigneeId){
-          const sel = prompt('Inserisci tuo nome (o scegli ID team):\n' + state.team.map(x=>`${x.id} → ${x.name}`).join('\n'));
-          if(sel && state.team.find(x=>x.id===sel)){ t.assigneeId=sel; }
+        if(!t.assigneeId && !t.assignee){
+          const sel = prompt('Inserisci il tuo nome o l’ID Team:\n' + state.team.map(x=>`${x.id} → ${x.name}`).join('\n'));
+          if(sel && state.team.find(x=>x.id===sel)){ t.assigneeId=sel; t.assignee=''; }
           else if(sel){ t.assignee = sel; }
         }
         save(); render();
       };
+
       div.querySelector('[data-assign]').onclick = ()=>{
         const choices = state.team.map(x=>`${x.id} → ${x.name}`).join('\n');
         const who = prompt('ID creativo (Team):\n' + choices, t.assigneeId||'');
         if(who===null) return;
-        if(state.team.find(x=>x.id===who)){ t.assigneeId=who; t.assignee=''; }
-        else { t.assigneeId=''; t.assignee=who||''; }
+        if(state.team.find(x=>x.id===who)){ t.assigneeId=who; t.assignee=''; } else { t.assigneeId=''; t.assignee=who||''; }
         save(); render();
+        notifyAssignee(t); // notifica automatica all'assegnazione
       };
-      div.querySelector('[data-notify]').onclick = ()=>{
-        const crt = t.assigneeId ? teamById(t.assigneeId) : null;
-        const msg = encodeURIComponent(`Ciao ${crt?.name||t.assignee||''}! Ti è stato assegnato: "${t.title}"\nCliente: ${clientName(t.clientId)}\nScadenza: ${t.due||'—'}\nInfo: ${(t.info||'').slice(0,240)}\n— Inviato da Anusual Flow`);
-        if(crt?.phone){
-          const phone=normalizePhone(crt.phone);
-          window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
-        } else if(crt?.email || t.assignee){
-          const mail = crt?.email || '';
-          window.location.href = `mailto:${encodeURIComponent(mail)}?subject=${encodeURIComponent('Nuovo lavoro assegnato')}&body=${msg}`;
-        } else {
-          alert('Nessun contatto disponibile. Aggiungi il creativo al Team con telefono/email.');
-        }
-      };
+
       div.querySelector('[data-done]').onclick = ()=> completeTodoFlow(t);
       div.querySelector('[data-edit]').onclick = ()=> editTodo(t);
       div.querySelector('[data-del]').onclick = ()=>{ if(confirm('Eliminare questo To-Do?')) removeTodo(t.id); };
@@ -478,10 +397,21 @@
     }
   }
 
-  // ——— Work (log): render + fatturazione ———
-  function renderWork(){
-    const el = $('#workList'); el.innerHTML='';
-    const items = filteredWork();
+  function renderDone(){
+    const el = $('#doneList'); el.innerHTML='';
+    const f = currentFilters();
+    let items = [...state.done];
+    if(f.q) items = items.filter(w =>
+      (w.title||'').toLowerCase().includes(f.q) ||
+      (w.info||'').toLowerCase().includes(f.q) ||
+      clientName(w.clientId).toLowerCase().includes(f.q) ||
+      (w.assignee||'').toLowerCase().includes(f.q)
+    );
+    if(f.client) items = items.filter(w => w.clientId===f.client);
+    if(f.from) items = items.filter(w => w.completedAt && w.completedAt >= f.from);
+    if(f.to) items = items.filter(w => w.completedAt && w.completedAt <= f.to);
+    items.sort((a,b)=> (b.completedAt||'').localeCompare(a.completedAt||''));
+
     for(const w of items){
       const div = document.createElement('div'); div.className='item';
       div.innerHTML = `
@@ -492,7 +422,7 @@
             <span class="pill green">completato</span>
           </div>
           <div class="muted">${w.info||''}</div>
-          <div class="soft">Data: <strong>${w.dateWorked||'—'}</strong> · Ore: <strong>${w.hours||0}</strong> · Valore: <strong>${currency(w.value||0)}</strong> · Operatore: ${assigneeChip(w.assignee)}</div>
+          <div class="soft">Data completamento: <strong>${w.completedAt||'—'}</strong> · Operatore: ${assigneeChip(w.assignee)}</div>
           <div class="fileline" id="wfiles-${w.id}"></div>
         </div>
         <div class="toolbar">
@@ -500,28 +430,12 @@
           <button class="btn danger" data-del="${w.id}">Elimina</button>
         </div>`;
       renderAttachedFiles(w, div.querySelector(`#wfiles-${w.id}`));
-      div.querySelector('[data-edit]').onclick = ()=> editWork(w);
-      div.querySelector('[data-del]').onclick = ()=>{ if(confirm('Eliminare questa voce di lavoro?')){ state.work = state.work.filter(x=>x.id!==w.id); save(); render(); } };
+      div.querySelector('[data-edit]').onclick = ()=> editDone(w);
+      div.querySelector('[data-del]').onclick = ()=>{ if(confirm('Eliminare questo lavoro effettuato?')){ state.done = state.done.filter(x=>x.id!==w.id); save(); render(); } };
       el.appendChild(div);
     }
-    // Totali fatturazione
-    const totH = items.reduce((s,w)=> s + (Number(w.hours)||0), 0);
-    const totV = items.reduce((s,w)=> s + (Number(w.value)||0), 0);
-    $('#bt_hours').textContent = totH.toFixed(2);
-    $('#bt_value').textContent = currency(totV);
   }
 
-  function exportCSV(){
-    const rows = [['Data','Cliente','Titolo','Ore','Valore','Creativo','Note']];
-    for(const w of filteredWork()){
-      rows.push([w.dateWorked||'', clientName(w.clientId), w.title||'', String(w.hours||0).replace('.',','), (w.value||0), w.assignee||'', (w.info||'').replace(/\n/g,' ')]);
-    }
-    const csv = rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(';')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='fatturazione.csv'; a.click();
-  }
-
-  // ——— CRUD To-Do ———
   function addTodoFromForm(){
     const clientId=$('#todo_client').value||''; const title=$('#todo_title').value.trim();
     const due=$('#todo_due').value||''; const info=$('#todo_info').value.trim();
@@ -529,43 +443,119 @@
     if(!clientId) return alert('Seleziona un cliente'); if(!title) return alert('Inserisci un titolo');
     const t={ id:uid(), clientId, title, due, info, priority, status:'open', files:[], assigneeId, assignee:'' };
     state.todos.unshift(t); save(); render();
+    if(assigneeId){ notifyAssignee(t); } // notifica automatica in creazione
     // pulizia
     $('#todo_title').value=''; $('#todo_due').value=''; $('#todo_info').value=''; $('#todo_assignee').value='';
   }
-  function editTodo(t){ const title=prompt('Titolo',t.title); if(title===null) return; const due=prompt('Scadenza (YYYY-MM-DD)',t.due||''); if(due===null) return; const info=prompt('Info / brief',t.info||''); if(info===null) return; Object.assign(t,{title,due,info}); save(); render(); }
-  function removeTodo(id){ const t=state.todos.find(x=>x.id===id); if(t?.files) t.files.forEach(f=>FileDB.del(f.id)); state.todos=state.todos.filter(x=>x.id!==id); save(); render(); }
-  async function completeTodoFlow(t){
-    const dateWorked = prompt('Data lavoro svolto (YYYY-MM-DD)', today()); if(dateWorked===null) return;
-    const hours = prompt('Ore lavorate (es. 1.5)', '1'); if(hours===null) return;
-    const value = prompt('Valore € (opzionale)', '0'); if(value===null) return;
-    const entry={ id:uid(), todoId:t.id, clientId:t.clientId, title:t.title, info:t.info, assignee:(teamById(t.assigneeId)?.name||t.assignee||''), dateWorked, hours:Number(hours)||0, value: Number(value)||0, files: t.files?[...t.files]:[] };
-    state.work.unshift(entry); t.status='done'; save(); render();
+
+  function editTodo(t){
+    const title=prompt('Titolo',t.title); if(title===null) return;
+    const due=prompt('Scadenza (YYYY-MM-DD)',t.due||''); if(due===null) return;
+    const info=prompt('Info / brief',t.info||''); if(info===null) return;
+    const pr=prompt('Priorità (urgente/non_urgente)', t.priority||'non_urgente'); if(pr===null) return;
+    Object.assign(t,{title,due,info,priority: (pr==='urgente'?'urgente':'non_urgente')}); save(); render();
   }
 
-  // ——— Work manuale (creativi) ———
-  function addManualWork(){
-    const clientId=$('#mw_client').value||''; if(!clientId) return alert('Seleziona cliente');
-    const date=$('#mw_date').value||today(); const hours=Number($('#mw_hours').value||0);
-    const value=Number($('#mw_value').value||0); const title=$('#mw_title').value.trim(); if(!title) return alert('Titolo richiesto');
-    const assigneeId=$('#mw_assignee').value||''; const assignee = assigneeId ? (teamById(assigneeId)?.name||'') : '';
-    const info=$('#mw_info').value.trim();
-    const entry={ id:uid(), clientId, title, info, assignee, dateWorked:date, hours, value, files:[] };
-    state.work.unshift(entry); save(); render();
-    // reset
-    $('#mw_hours').value=''; $('#mw_value').value=''; $('#mw_title').value=''; $('#mw_info').value='';
+  function removeTodo(id){
+    const t=state.todos.find(x=>x.id===id); if(t?.files) t.files.forEach(f=>FileDB.del(f.id));
+    state.todos=state.todos.filter(x=>x.id!==id); save(); render();
   }
-  function editWork(w){
-    const dateWorked=prompt('Data lavoro (YYYY-MM-DD)', w.dateWorked||today()); if(dateWorked===null) return;
-    const hours=prompt('Ore (decimali)', String(w.hours||0)); if(hours===null) return;
-    const value=prompt('Valore €', String(w.value||0)); if(value===null) return;
-    const assignee=prompt('Operatore', w.assignee||''); if(assignee===null) return;
-    const title=prompt('Titolo', w.title||''); if(title===null) return;
-    const info=prompt('Info', w.info||''); if(info===null) return;
-    Object.assign(w,{dateWorked, hours:Number(hours)||0, value:Number(value)||0, assignee, title, info});
+
+  function completeTodoFlow(t){
+    const dateWorked = prompt('Data completamento (YYYY-MM-DD)', today()); if(dateWorked===null) return;
+    const entry={ id:uid(), clientId:t.clientId, title:t.title, info:t.info, assignee:(teamById(t.assigneeId)?.name||t.assignee||''), completedAt:dateWorked, files: t.files?[...t.files]:[] };
+    state.done.unshift(entry);
+    t.status='done';
     save(); render();
   }
 
-  // ——— Eventi UI ———
+  function editDone(w){
+    const date=prompt('Data completamento (YYYY-MM-DD)', w.completedAt||today()); if(date===null) return;
+    const assignee=prompt('Operatore', w.assignee||''); if(assignee===null) return;
+    const title=prompt('Titolo', w.title||''); if(title===null) return;
+    const info=prompt('Info', w.info||''); if(info===null) return;
+    Object.assign(w,{completedAt:date, assignee, title, info});
+    save(); render();
+  }
+
+  // ===== Notifiche automatiche (WhatsApp / mail) =====
+  function notifyAssignee(task){
+    const crt = task.assigneeId ? teamById(task.assigneeId) : null;
+    const name = crt?.name || task.assignee || 'Creativo';
+    const msg = encodeURIComponent(
+      `Ciao ${name}! Ti è stato assegnato: "${task.title}"\n` +
+      `Cliente: ${clientName(task.clientId)}\nScadenza: ${task.due||'—'}\n` +
+      `Info: ${(task.info||'').slice(0,240)}\n— Inviato da Anusual Flow`
+    );
+    // priorità canale: WhatsApp se c'è telefono, altrimenti email
+    if(crt?.phone){
+      const phone=normalizePhone(crt.phone);
+      window.open(`https://wa.me/${phone}?text=${msg}`,'_blank'); // gesto utente: click su pubblica/assegna
+    } else if(crt?.email || task.assignee){
+      const mail = crt?.email || '';
+      window.location.href = `mailto:${encodeURIComponent(mail)}?subject=${encodeURIComponent('Nuovo lavoro assegnato')}&body=${msg}`;
+    } else {
+      // nessun contatto: niente da fare (evitiamo popup bloccati)
+      console.warn('Nessun contatto disponibile per la notifica.');
+    }
+  }
+
+  // ===== Dettatura (Web Speech API) =====
+  let recognizing=false, recognition;
+  function initSTT(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR) return null;
+    if(!recognition){
+      recognition=new SR(); recognition.lang='it-IT'; recognition.interimResults=false; recognition.continuous=false;
+      recognition.onresult=(e)=>{ let txt=''; for(const r of e.results){ txt+=r[0].transcript+' '; } $('#todo_info').value = ($('#todo_info').value+' '+txt).trim(); };
+      recognition.onend=()=>{ recognizing=false; $('#sttBtn').textContent='🗣️ Dettatura'; $('#sttBtn').disabled=false; };
+      recognition.onerror=(e)=>{ recognizing=false; $('#sttBtn').textContent='🗣️ Dettatura'; alert('Errore dettatura: '+(e.error||'sconosciuto')); };
+    }
+    return recognition;
+  }
+  $('#sttBtn').onclick = ()=>{
+    const rec=initSTT(); if(!rec){ alert('Dettatura non supportata su questo browser.'); return; }
+    if(!recognizing){ recognizing=true; $('#sttBtn').textContent='🛑 Ferma dettatura'; $('#sttBtn').disabled=true; rec.start(); }
+  };
+
+  // ===== Registrazione audio (MediaRecorder) =====
+  let mediaRecorder, chunks=[];
+  $('#recBtn').onclick = async ()=>{
+    try{
+      if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.stop(); return; }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      $('#recStatus').textContent = 'Registrazione in corso... clicca per fermare';
+      mediaRecorder.start(); $('#recBtn').textContent='⏹️ Ferma';
+      mediaRecorder.ondataavailable = e => { if(e.data?.size>0) chunks.push(e.data); };
+      mediaRecorder.onstop = async ()=>{
+        try{
+          const blob = new Blob(chunks, { type:'audio/webm' }); chunks=[];
+          const id = uid(); await FileDB.put(id, blob);
+          const f = { id, name:`memo-${new Date().toISOString().slice(0,19)}.webm`, type:'audio/webm', size:blob.size };
+          (window._pendingFiles = window._pendingFiles||[]).push(f);
+          $('#recStatus').textContent = 'Audio allegato al prossimo To-Do.';
+        }catch(err){ alert('Salvataggio audio fallito: '+err.message); }
+        $('#recBtn').textContent='🎙️ Registra';
+      };
+      // Autostop dopo 5 minuti per sicurezza
+      setTimeout(()=>{ if(mediaRecorder && mediaRecorder.state==='recording') mediaRecorder.stop(); }, 5*60*1000);
+    }catch(err){
+      alert('Microfono non disponibile o negato: ' + (err.message||err.name||err));
+      $('#recBtn').textContent='🎙️ Registra';
+    }
+  };
+
+  // Associa eventuali file registrati al momento dell’aggiunta To-Do
+  async function afterAddAttachRecent(){
+    if(window._pendingFiles?.length && state.todos[0]){
+      state.todos[0].files = [...(state.todos[0].files||[]), ...window._pendingFiles];
+      window._pendingFiles = [];
+      save(); render();
+    }
+  }
+
+  // ===== Eventi UI =====
   $('#addClientBtn').onclick = ()=>{
     const name=$('#c_name').value.trim(); if(!name) return alert('Nome cliente obbligatorio');
     const contact=$('#c_contact').value.trim(); const notes=$('#c_notes').value.trim();
@@ -585,43 +575,43 @@
   $('#addTodoBtn').onclick = async ()=>{
     const addedFiles = await collectAndStoreFiles($('#todo_files'));
     addTodoFromForm();
-    if(state.todos[0] && addedFiles.length){ state.todos[0].files = addedFiles; save(); render(); }
+    await afterAddAttachRecent();
   };
   $('#clearTodoForm').onclick = ()=>{ $('#todo_title').value=''; $('#todo_due').value=''; $('#todo_info').value=''; $('#todo_assignee').value=''; $('#todo_files').value=''; };
 
-  $('#mw_add').onclick = addManualWork;
-
-  // Filtri & export
-  const renderAll=()=>{ renderTodos(); renderWork(); kpis(); };
+  // Filtri
+  const renderAll=()=>{ renderTodos(); renderDone(); kpis(); };
   $('#search').oninput=renderAll; $('#f_client').onchange=renderAll; $('#f_from').onchange=renderAll; $('#f_to').onchange=renderAll;
   $('#resetFilters').onclick=()=>{ $('#search').value=''; $('#f_client').value=''; $('#f_from').value=''; $('#f_to').value=''; renderAll(); };
-  $('#exportCSV').onclick=exportCSV;
 
   // Export/Import JSON
   $('#exportBtn').onclick=()=>{ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='anusual-flow-export.json'; a.click(); };
   $('#importBtn').onclick=()=>$('#importFile').click();
-  $('#importFile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ const data=JSON.parse(await f.text()); if(!data.clients||!data.todos||!data.work||!data.team) throw new Error('Formato non valido'); state=data; save(); render(); }catch(err){ alert('Import fallito: '+err.message); } };
+  $('#importFile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ const data=JSON.parse(await f.text()); if(!data.clients||!data.todos||!data.done||!data.team) throw new Error('Formato non valido'); state=data; save(); render(); }catch(err){ alert('Import fallito: '+err.message); } };
 
-  // Test minimi
+  // Test minimi (senza “ore”)
   function runTests(){
     const out=[]; const assert=(name,cond)=>out.push(`${cond?'✅':'❌'} ${name}`);
     const a=uid(), b=uid(); assert('uid unici', a!==b);
-    const prev=JSON.stringify(state); DB.set(state); const loaded=DB.get(); assert('persistenza localStorage', JSON.stringify(loaded)===JSON.stringify(state));
-    // filtro periodo
-    const cid='c1'; const sample={clients:[{id:cid,name:'ACME'}], todos:[], work:[{id:'w1',clientId:cid,title:'X',dateWorked:'2025-08-01',hours:1,value:50},{id:'w2',clientId:cid,title:'Y',dateWorked:'2025-08-10',hours:2,value:100}]};
+    const prev=JSON.stringify(state); DB.set(state); const loaded=DB.get(); assert('persistenza', JSON.stringify(loaded)===JSON.stringify(state));
+    // filtro completati per periodo
+    const cid='c1'; const sample={clients:[{id:cid,name:'ACME'}], todos:[], done:[
+      {id:'d1',clientId:cid,title:'X',completedAt:'2025-08-01'},
+      {id:'d2',clientId:cid,title:'Y',completedAt:'2025-08-10'}
+    ], team:[]};
     const keep=state; state=sample;
-    const f= (from,to)=> sample.work.filter(w=>w.dateWorked>=from && w.dateWorked<=to);
-    assert('filtro data periodo', f('2025-08-05','2025-08-12').length===1 && f('2025-08-05','2025-08-12')[0].id==='w2');
+    const inRange = sample.done.filter(w=> w.completedAt>='2025-08-05' && w.completedAt<='2025-08-31');
+    assert('filtro data completati', inRange.length===1 && inRange[0].id==='d2');
     state=keep;
     alert(out.join('\n'));
   }
   document.getElementById('runTestsBtn').onclick=runTests;
 
-  // Persistenza
+  // Persistenza + Render
   function save(){ DB.set(state); kpis(); }
-  function render(){ renderClients(); renderTeam(); renderTodos(); renderWork(); kpis(); }
+  function render(){ renderClients(); renderTeam(); renderTodos(); renderDone(); kpis(); }
 
-  // Bootstrap
+  // Bootstrap iniziale (demo)
   if(state.clients.length===0){ state.clients.push({id:uid(), name:'Cliente Demo', contact:'demo@esempio.it', notes:'Esempio'}); }
   if(state.team.length===0){ state.team.push({id:uid(), name:'Creativo Demo', phone:'3931234567', email:'demo@esempio.it'}); }
   refreshClientOptions(); refreshTeamOptions(); save(); render();
