@@ -26,12 +26,14 @@
       padding:14px 18px; background:rgba(255,255,255,.85); backdrop-filter:blur(8px);
       border-bottom:1px solid var(--border);
     }
-    header h1{margin:0; font-size:18px; font-weight:800; letter-spacing:.2px;
+    header h1{
+      margin:0; font-size:18px; font-weight:800; letter-spacing:.2px; display:flex; align-items:center; gap:10px;
       background:linear-gradient(90deg, var(--gradA), var(--gradC), var(--gradB));
       -webkit-background-clip:text; background-clip:text; color:transparent;
     }
+    .logo { width:22px; height:22px; display:inline-block; vertical-align:middle }
     .spacer{flex:1}
-    .wrap{display:grid; grid-template-columns:340px 1fr; gap:16px; padding:16px}
+    .wrap{display:grid; grid-template-columns:360px 1fr; gap:16px; padding:16px}
     @media (max-width: 1024px){ .wrap{grid-template-columns:1fr} }
     .card{
       background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow)
@@ -49,10 +51,7 @@
       border-radius:10px; padding:9px 12px; cursor:pointer
     }
     .btn:hover{filter:brightness(1.02)}
-    .btn.primary{
-      background:linear-gradient(90deg, var(--gradA), var(--gradC));
-      color:#fff; border:0;
-    }
+    .btn.primary{ background:linear-gradient(90deg, var(--gradA), var(--gradC)); color:#fff; border:0; }
     .btn.ghost{background:#fff; border:1px dashed var(--border); color:var(--muted)}
     .btn.danger{background:#fff; border-color:#fecaca; color:#b91c1c}
     .list{display:flex; flex-direction:column; gap:10px}
@@ -73,36 +72,68 @@
     .pill.green{color:#065f46; background:#d1fae5}
     .pill.amber{color:#92400e; background:#fef3c7}
     .pill.red{color:#991b1b; background:#fee2e2}
+
+    /* Modal Anagrafiche */
+    .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50}
+    .modal{width:min(920px, 95vw); max-height:90vh; overflow:auto; background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); padding:14px}
+    .tabs{display:flex; gap:8px; margin-bottom:10px}
+    .tab{padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:#fff; cursor:pointer}
+    .tab.active{background:linear-gradient(90deg, var(--gradA), var(--gradC)); color:#fff; border:0}
+    .hidden{display:none !important}
+
+    /* Auth */
+    .auth-wrap{min-height:100vh; display:grid; place-items:center; padding:20px}
+    .auth-card{width:min(520px, 95vw)}
+    .auth-tabs{display:flex; gap:8px; margin-bottom:10px}
+    .auth-tab{flex:1; text-align:center}
   </style>
 </head>
 <body>
-  <header>
-    <h1>Anusual Flow</h1>
+  <header id="topbar" class="hidden">
+    <h1>
+      <img src="logo-anusual.svg" alt="Anusual" class="logo"/>
+      Anusual Flow
+    </h1>
     <span class="spacer"></span>
+    <button class="btn ghost" id="btnAnagrafiche" title="Clienti & Creativi (solo GM)">Anagrafiche</button>
     <button class="btn ghost" id="runTestsBtn">Test</button>
     <button class="btn ghost" id="exportBtn" title="Scarica JSON">Esporta</button>
     <button class="btn ghost" id="importBtn" title="Importa JSON">Importa</button>
     <input id="importFile" type="file" accept="application/json" style="display:none"/>
+    <span id="whoami" class="soft" style="margin-left:8px"></span>
+    <button class="btn" id="logoutBtn">Logout</button>
   </header>
 
-  <div class="wrap">
-    <!-- COLONNA SINISTRA: General Manager + Team -->
-    <aside class="card">
-      <h2>General Manager</h2>
-      <div class="divider"></div>
-
-      <h3 class="muted">Anagrafica clienti</h3>
-      <label>Nome cliente</label><input id="c_name" placeholder="Es. Comune di X"/>
-      <label>Contatto (email/telefono)</label><input id="c_contact" placeholder="email o telefono"/>
-      <label>Note cliente</label><textarea id="c_notes" placeholder="Settore, referenti, info utili..."></textarea>
-      <div class="toolbar">
-        <button class="btn" id="addClientBtn">Aggiungi cliente</button>
-        <button class="btn ghost" id="clearClientForm">Pulisci</button>
+  <!-- AUTH -->
+  <div id="auth" class="auth-wrap">
+    <div class="card auth-card">
+      <h2>Accedi o Registrati</h2>
+      <div class="auth-tabs">
+        <button class="btn auth-tab" id="tabLogin">Accedi</button>
+        <button class="btn auth-tab" id="tabRegister">Registrati (creativi)</button>
       </div>
+      <div id="loginForm">
+        <label>Email</label><input id="login_email" type="email" placeholder="email"/>
+        <label>Password</label><input id="login_pwd" type="password" placeholder="password"/>
+        <div class="toolbar" style="margin-top:10px"><button class="btn primary" id="doLogin">Entra</button></div>
+        <div class="soft" style="margin-top:6px">GM predefinito: <code>info@anusual.it</code> / <code>Bonvini2022</code></div>
+      </div>
+      <div id="registerForm" class="hidden">
+        <label>Nome</label><input id="reg_name" placeholder="Il tuo nome"/>
+        <label>Email</label><input id="reg_email" type="email" placeholder="email"/>
+        <label>Password</label><input id="reg_pwd" type="password" placeholder="password"/>
+        <div class="toolbar" style="margin-top:10px"><button class="btn primary" id="doRegister">Crea account</button></div>
+      </div>
+    </div>
+  </div>
 
+  <!-- APP -->
+  <div id="app" class="wrap hidden">
+    <!-- COLONNA SINISTRA: solo Nuovo To-Do pubblico, visibile a tutti -->
+    <aside class="card">
+      <h2>Nuovo To-Do pubblico</h2>
       <div class="divider"></div>
 
-      <h3 class="muted">Nuovo To-Do pubblico</h3>
       <label>Cliente</label><select id="todo_client"></select>
       <label>Titolo</label><input id="todo_title" placeholder="Es. Post FB + grafica"/>
       <label>Scadenza</label><input id="todo_due" type="date"/>
@@ -134,21 +165,6 @@
         <button class="btn primary" id="addTodoBtn">Pubblica To-Do</button>
         <button class="btn ghost" id="clearTodoForm">Pulisci</button>
       </div>
-
-      <div class="divider"></div>
-
-      <h3 class="muted">Team creativi (notifiche)</h3>
-      <label>Nome</label><input id="t_name" placeholder="Es. Giulia B."/>
-      <div class="row">
-        <div><label>Telefono (WhatsApp)</label><input id="t_phone" placeholder="es. 3931234567"/></div>
-        <div><label>Email</label><input id="t_email" placeholder="nome@esempio.it"/></div>
-      </div>
-      <div class="toolbar">
-        <button class="btn" id="addTeamBtn">Aggiungi creativo</button>
-        <button class="btn ghost" id="clearTeamForm">Pulisci</button>
-      </div>
-      <div class="divider"></div>
-      <div id="teamList" class="list"></div>
     </aside>
 
     <!-- COLONNA DESTRA -->
@@ -170,6 +186,7 @@
           <input id="f_from" type="date" title="Da (data completamento)"/>
           <input id="f_to" type="date" title="A (data completamento)"/>
           <button class="btn" id="resetFilters">Reset</button>
+          <button class="btn" id="exportCSV">Export CSV</button>
         </div>
       </section>
 
@@ -182,33 +199,128 @@
         <h2>Lavori effettuati</h2>
         <div class="list" id="doneList"></div>
       </section>
-
-      <section class="card">
-        <h2>Clienti</h2>
-        <div class="list" id="clientList"></div>
-      </section>
     </main>
   </div>
 
+  <!-- MODALE ANAGRAFICHE (menu separato) -->
+  <div id="anaModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="row" style="align-items:center">
+        <h2 style="margin:0">Anagrafiche</h2>
+        <span class="spacer"></span>
+        <button class="btn" id="closeAna">Chiudi</button>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tabClients">Clienti</button>
+        <button class="tab" id="tabTeam">Creativi</button>
+      </div>
+
+      <!-- CLIENTI -->
+      <div id="paneClients">
+        <div class="row">
+          <div>
+            <label>Nome cliente</label><input id="c_name" placeholder="Es. Comune di X"/>
+          </div>
+          <div>
+            <label>Contatto (email/telefono)</label><input id="c_contact" placeholder="email o telefono"/>
+          </div>
+        </div>
+        <label>Note cliente</label><textarea id="c_notes" placeholder="Settore, referenti, info utili..."></textarea>
+        <div class="toolbar">
+          <button class="btn" id="addClientBtn">Aggiungi cliente</button>
+          <button class="btn ghost" id="clearClientForm">Pulisci</button>
+        </div>
+        <div class="divider"></div>
+        <div id="clientList" class="list"></div>
+      </div>
+
+      <!-- TEAM -->
+      <div id="paneTeam" class="hidden">
+        <label>Nome</label><input id="t_name" placeholder="Es. Giulia B."/>
+        <div class="row">
+          <div><label>Telefono (WhatsApp)</label><input id="t_phone" placeholder="es. 3931234567"/></div>
+          <div><label>Email</label><input id="t_email" placeholder="nome@esempio.it"/></div>
+        </div>
+        <div class="toolbar">
+          <button class="btn" id="addTeamBtn">Aggiungi creativo</button>
+          <button class="btn ghost" id="clearTeamForm">Pulisci</button>
+        </div>
+        <div class="divider"></div>
+        <div id="teamList" class="list"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
-  // ===== Mini “DB” =====
+  // ===== Storage & Models =====
   const DB = {
-    key:'aflow.v2',
-    get(){ try { return JSON.parse(localStorage.getItem(this.key)) || { clients:[], todos:[], done:[], team:[] }; } catch { return { clients:[], todos:[], done:[], team:[] }; } },
-    set(d){ localStorage.setItem(this.key, JSON.stringify(d)); }
+    appKey:'aflow.v3',
+    usersKey:'aflow_users',
+    sessionKey:'aflow_session',
+    get(){ try { return JSON.parse(localStorage.getItem(this.appKey)) || { clients:[], todos:[], done:[], team:[] }; } catch { return { clients:[], todos:[], done:[], team:[] }; } },
+    set(d){ localStorage.setItem(this.appKey, JSON.stringify(d)); },
+    getUsers(){ try { return JSON.parse(localStorage.getItem(this.usersKey)) || []; } catch { return []; } },
+    setUsers(u){ localStorage.setItem(this.usersKey, JSON.stringify(u)); },
+    getSession(){ try { return JSON.parse(localStorage.getItem(this.sessionKey)) || null; } catch { return null; } },
+    setSession(s){ localStorage.setItem(this.sessionKey, JSON.stringify(s)); }
   };
   const uid = () => Math.random().toString(36).slice(2,10);
   const today = () => new Date().toISOString().slice(0,10);
-
-  let state = DB.get();
   const $ = (s)=>document.querySelector(s);
 
+  // ===== App State =====
+  let state = DB.get();
+  let users = DB.getUsers();
+  let session = DB.getSession();
+  const currentUser = ()=> users.find(u=>u.id===session?.userId) || null;
+
+  // Ensure GM exists
+  function ensureGM(){
+    const hasGM = users.some(u=>u.role==='gm');
+    if(!hasGM){
+      const gm = { id:uid(), name:'General Manager', email:'info@anusual.it', password:'Bonvini2022', role:'gm' };
+      users.push(gm); DB.setUsers(users);
+    }
+  }
+  ensureGM();
+
+  // ===== Helpers =====
   function normalizePhone(p){ return (p||'').replace(/[^0-9]/g,''); }
   function clientName(id){ return state.clients.find(c=>c.id===id)?.name || '—'; }
   function teamById(id){ return state.team.find(t=>t.id===id) || null; }
   function assigneeChip(w){ return w ? `<span class="avatar" title="${w}">${w.slice(0,2).toUpperCase()}</span> ${w}` : '<span class="muted">non assegnato</span>'; }
 
-  // ===== UI Populate =====
+  // ===== Auth UI =====
+  function showAppUI(){
+    $('#auth').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    $('#topbar').classList.remove('hidden');
+    const me = currentUser();
+    $('#whoami').textContent = me ? `${me.name} (${me.role})` : '';
+    // GM only: anagrafiche
+    $('#btnAnagrafiche').style.display = me?.role === 'gm' ? 'inline-block' : 'none';
+  }
+  function showAuthUI(){
+    $('#auth').classList.remove('hidden');
+    $('#app').classList.add('hidden');
+    $('#topbar').classList.add('hidden');
+  }
+
+  function login(email, pwd){
+    const u = users.find(x=>x.email.toLowerCase()===email.toLowerCase() && x.password===pwd);
+    if(!u) return false;
+    DB.setSession({ userId:u.id });
+    session = DB.getSession();
+    return true;
+  }
+  function register(name, email, pwd){
+    if(users.some(u=>u.email.toLowerCase()===email.toLowerCase())) throw new Error('Email già registrata');
+    const u = { id:uid(), name, email, password:pwd, role:'creative' };
+    users.push(u); DB.setUsers(users);
+    DB.setSession({ userId:u.id }); session = DB.getSession();
+  }
+
+  // ===== Populate selects =====
   function refreshClientOptions(){
     const opts = state.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
     $('#todo_client').innerHTML = `<option value="">— Cliente —</option>` + opts;
@@ -227,7 +339,7 @@
     $('#kpi_open').textContent=open; $('#kpi_taken').textContent=taken; $('#kpi_done').textContent=done;
   }
 
-  // ===== Filtri globali (per le liste) =====
+  // ===== Filters =====
   function currentFilters(){
     return {
       q: ($('#search').value||'').toLowerCase(),
@@ -237,7 +349,7 @@
     };
   }
 
-  // ===== Render Clienti/Team =====
+  // ===== Render Clients/Team (in modal) =====
   function renderTeam(){
     refreshTeamOptions();
     const el = $('#teamList'); el.innerHTML='';
@@ -245,9 +357,7 @@
       const div = document.createElement('div'); div.className='item';
       div.innerHTML = `
         <div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <strong>${t.name}</strong>
-          </div>
+          <div style="display:flex;gap:8px;align-items:center"><strong>${t.name}</strong></div>
           <div class="soft">${t.phone ? '📱 ' + t.phone : ''} ${t.email ? ' · ✉️ ' + t.email : ''}</div>
         </div>
         <div class="toolbar">
@@ -272,10 +382,7 @@
       const div = document.createElement('div'); div.className='item';
       div.innerHTML = `
         <div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">Cliente</span>
-            <strong>${c.name}</strong>
-          </div>
+          <div style="display:flex;gap:8px;align-items:center"><span class="tag">Cliente</span><strong>${c.name}</strong></div>
           <div class="soft">${c.contact||''}</div>
           <div class="muted">${c.notes||''}</div>
         </div>
@@ -294,8 +401,8 @@
     });
   }
 
-  // ===== Allegati (IndexedDB) =====
-  const FileDB = (()=>{ const DB_NAME='aflow_files_v2', STORE='files'; let db;
+  // ===== File attachments (IndexedDB) =====
+  const FileDB = (()=>{ const DB_NAME='aflow_files_v3', STORE='files'; let db;
     function open(){ return new Promise((res,rej)=>{ const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE); r.onsuccess=()=>{db=r.result;res();}; r.onerror=()=>rej(r.error); });}
     async function put(id, blob){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readwrite'); tx.objectStore(STORE).put(blob,id); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); });}
     async function get(id){ if(!db) await open(); return new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readonly'); const r=tx.objectStore(STORE).get(id); r.onsuccess=()=>res(r.result||null); r.onerror=()=>rej(r.error); });}
@@ -374,9 +481,12 @@
       div.querySelector('[data-take]').onclick = ()=>{
         t.status='taken';
         if(!t.assigneeId && !t.assignee){
-          const sel = prompt('Inserisci il tuo nome o l’ID Team:\n' + state.team.map(x=>`${x.id} → ${x.name}`).join('\n'));
-          if(sel && state.team.find(x=>x.id===sel)){ t.assigneeId=sel; t.assignee=''; }
-          else if(sel){ t.assignee = sel; }
+          const me = currentUser();
+          if(me && me.role==='creative'){ t.assignee = me.name; } else {
+            const sel = prompt('Inserisci il tuo nome o ID Team:\n' + state.team.map(x=>`${x.id} → ${x.name}`).join('\n'));
+            if(sel && state.team.find(x=>x.id===sel)){ t.assigneeId=sel; t.assignee=''; }
+            else if(sel){ t.assignee = sel; }
+          }
         }
         save(); render();
       };
@@ -387,7 +497,7 @@
         if(who===null) return;
         if(state.team.find(x=>x.id===who)){ t.assigneeId=who; t.assignee=''; } else { t.assigneeId=''; t.assignee=who||''; }
         save(); render();
-        notifyAssignee(t); // notifica automatica all'assegnazione
+        notifyAssignee(t); // auto-notifica
       };
 
       div.querySelector('[data-done]').onclick = ()=> completeTodoFlow(t);
@@ -431,7 +541,7 @@
         </div>`;
       renderAttachedFiles(w, div.querySelector(`#wfiles-${w.id}`));
       div.querySelector('[data-edit]').onclick = ()=> editDone(w);
-      div.querySelector('[data-del]').onclick = ()=>{ if(confirm('Eliminare questo lavoro effettuato?')){ state.done = state.done.filter(x=>x.id!==w.id); save(); render(); } };
+      div.querySelector('[data-del]').onclick = ()=>{ if(confirm('Eliminare questo lavoro?')){ state.done = state.done.filter(x=>x.id!==w.id); save(); render(); } };
       el.appendChild(div);
     }
   }
@@ -443,11 +553,10 @@
     if(!clientId) return alert('Seleziona un cliente'); if(!title) return alert('Inserisci un titolo');
     const t={ id:uid(), clientId, title, due, info, priority, status:'open', files:[], assigneeId, assignee:'' };
     state.todos.unshift(t); save(); render();
-    if(assigneeId){ notifyAssignee(t); } // notifica automatica in creazione
+    if(assigneeId){ notifyAssignee(t); } // auto-notifica in creazione
     // pulizia
     $('#todo_title').value=''; $('#todo_due').value=''; $('#todo_info').value=''; $('#todo_assignee').value='';
   }
-
   function editTodo(t){
     const title=prompt('Titolo',t.title); if(title===null) return;
     const due=prompt('Scadenza (YYYY-MM-DD)',t.due||''); if(due===null) return;
@@ -455,12 +564,10 @@
     const pr=prompt('Priorità (urgente/non_urgente)', t.priority||'non_urgente'); if(pr===null) return;
     Object.assign(t,{title,due,info,priority: (pr==='urgente'?'urgente':'non_urgente')}); save(); render();
   }
-
   function removeTodo(id){
     const t=state.todos.find(x=>x.id===id); if(t?.files) t.files.forEach(f=>FileDB.del(f.id));
     state.todos=state.todos.filter(x=>x.id!==id); save(); render();
   }
-
   function completeTodoFlow(t){
     const dateWorked = prompt('Data completamento (YYYY-MM-DD)', today()); if(dateWorked===null) return;
     const entry={ id:uid(), clientId:t.clientId, title:t.title, info:t.info, assignee:(teamById(t.assigneeId)?.name||t.assignee||''), completedAt:dateWorked, files: t.files?[...t.files]:[] };
@@ -468,7 +575,6 @@
     t.status='done';
     save(); render();
   }
-
   function editDone(w){
     const date=prompt('Data completamento (YYYY-MM-DD)', w.completedAt||today()); if(date===null) return;
     const assignee=prompt('Operatore', w.assignee||''); if(assignee===null) return;
@@ -478,7 +584,7 @@
     save(); render();
   }
 
-  // ===== Notifiche automatiche (WhatsApp / mail) =====
+  // ===== Notifiche auto (WhatsApp/Mail) =====
   function notifyAssignee(task){
     const crt = task.assigneeId ? teamById(task.assigneeId) : null;
     const name = crt?.name || task.assignee || 'Creativo';
@@ -487,20 +593,16 @@
       `Cliente: ${clientName(task.clientId)}\nScadenza: ${task.due||'—'}\n` +
       `Info: ${(task.info||'').slice(0,240)}\n— Inviato da Anusual Flow`
     );
-    // priorità canale: WhatsApp se c'è telefono, altrimenti email
     if(crt?.phone){
       const phone=normalizePhone(crt.phone);
-      window.open(`https://wa.me/${phone}?text=${msg}`,'_blank'); // gesto utente: click su pubblica/assegna
+      window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
     } else if(crt?.email || task.assignee){
       const mail = crt?.email || '';
       window.location.href = `mailto:${encodeURIComponent(mail)}?subject=${encodeURIComponent('Nuovo lavoro assegnato')}&body=${msg}`;
-    } else {
-      // nessun contatto: niente da fare (evitiamo popup bloccati)
-      console.warn('Nessun contatto disponibile per la notifica.');
     }
   }
 
-  // ===== Dettatura (Web Speech API) =====
+  // ===== Speech-to-text =====
   let recognizing=false, recognition;
   function initSTT(){
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -518,7 +620,7 @@
     if(!recognizing){ recognizing=true; $('#sttBtn').textContent='🛑 Ferma dettatura'; $('#sttBtn').disabled=true; rec.start(); }
   };
 
-  // ===== Registrazione audio (MediaRecorder) =====
+  // ===== Registrazione audio =====
   let mediaRecorder, chunks=[];
   $('#recBtn').onclick = async ()=>{
     try{
@@ -538,15 +640,12 @@
         }catch(err){ alert('Salvataggio audio fallito: '+err.message); }
         $('#recBtn').textContent='🎙️ Registra';
       };
-      // Autostop dopo 5 minuti per sicurezza
       setTimeout(()=>{ if(mediaRecorder && mediaRecorder.state==='recording') mediaRecorder.stop(); }, 5*60*1000);
     }catch(err){
       alert('Microfono non disponibile o negato: ' + (err.message||err.name||err));
       $('#recBtn').textContent='🎙️ Registra';
     }
   };
-
-  // Associa eventuali file registrati al momento dell’aggiunta To-Do
   async function afterAddAttachRecent(){
     if(window._pendingFiles?.length && state.todos[0]){
       state.todos[0].files = [...(state.todos[0].files||[]), ...window._pendingFiles];
@@ -555,68 +654,118 @@
     }
   }
 
-  // ===== Eventi UI =====
+  // ===== CSV Export (filtra “Lavori effettuati”) =====
+  function exportCSV(){
+    const f = currentFilters();
+    let items = [...state.done];
+    if(f.q) items = items.filter(w =>
+      (w.title||'').toLowerCase().includes(f.q) ||
+      (w.info||'').toLowerCase().includes(f.q) ||
+      clientName(w.clientId).toLowerCase().includes(f.q) ||
+      (w.assignee||'').toLowerCase().includes(f.q)
+    );
+    if(f.client) items = items.filter(w => w.clientId===f.client);
+    if(f.from) items = items.filter(w => w.completedAt && w.completedAt >= f.from);
+    if(f.to) items = items.filter(w => w.completedAt && w.completedAt <= f.to);
+    const rows = [['Data','Cliente','Titolo','Creativo','Note','Priorità']];
+    for(const w of items){
+      const td = state.todos.find(t=>t.title===w.title && t.clientId===w.clientId) || null;
+      rows.push([w.completedAt||'', clientName(w.clientId), w.title||'', w.assignee||'', (w.info||'').replace(/\n/g,' '), (td?.priority==='urgente'?'urgente':'non_urgente')]);
+    }
+    const csv = rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(';')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='report.csv'; a.click();
+  }
+
+  // ===== UI Events =====
+  // Auth tabs
+  $('#tabLogin').onclick = ()=>{ $('#loginForm').classList.remove('hidden'); $('#registerForm').classList.add('hidden'); };
+  $('#tabRegister').onclick = ()=>{ $('#registerForm').classList.remove('hidden'); $('#loginForm').classList.add('hidden'); };
+  $('#doLogin').onclick = ()=>{
+    const ok = login($('#login_email').value.trim(), $('#login_pwd').value);
+    if(!ok){ alert('Credenziali non valide'); return; }
+    showAppUI(); render();
+  };
+  $('#doRegister').onclick = ()=>{
+    try{
+      register($('#reg_name').value.trim(), $('#reg_email').value.trim(), $('#reg_pwd').value);
+      showAppUI(); render();
+    }catch(e){ alert(e.message||e); }
+  };
+  $('#logoutBtn').onclick = ()=>{ localStorage.removeItem(DB.sessionKey); session=null; showAuthUI(); };
+
+  // Modale Anagrafiche (solo GM)
+  const ana = $('#anaModal');
+  $('#btnAnagrafiche').onclick = ()=>{ ana.style.display='flex'; renderClients(); renderTeam(); };
+  $('#closeAna').onclick = ()=>{ ana.style.display='none'; };
+  $('#tabClients').onclick = ()=>{ $('#tabClients').classList.add('active'); $('#tabTeam').classList.remove('active'); $('#paneClients').classList.remove('hidden'); $('#paneTeam').classList.add('hidden'); };
+  $('#tabTeam').onclick = ()=>{ $('#tabTeam').classList.add('active'); $('#tabClients').classList.remove('active'); $('#paneTeam').classList.remove('hidden'); $('#paneClients').classList.add('hidden'); };
+
+  // Clienti
   $('#addClientBtn').onclick = ()=>{
     const name=$('#c_name').value.trim(); if(!name) return alert('Nome cliente obbligatorio');
     const contact=$('#c_contact').value.trim(); const notes=$('#c_notes').value.trim();
-    state.clients.unshift({ id:uid(), name, contact, notes }); save(); render();
+    state.clients.unshift({ id:uid(), name, contact, notes }); save(); renderClients(); refreshClientOptions();
     $('#c_name').value=''; $('#c_contact').value=''; $('#c_notes').value='';
   };
   $('#clearClientForm').onclick = ()=>{ $('#c_name').value=''; $('#c_contact').value=''; $('#c_notes').value=''; };
 
+  // Team
   $('#addTeamBtn').onclick = ()=>{
     const name=$('#t_name').value.trim(); if(!name) return alert('Nome richiesto');
     const phone=$('#t_phone').value.trim(); const email=$('#t_email').value.trim();
-    state.team.unshift({ id:uid(), name, phone, email }); save(); render();
+    state.team.unshift({ id:uid(), name, phone, email }); save(); renderTeam(); refreshTeamOptions();
     $('#t_name').value=''; $('#t_phone').value=''; $('#t_email').value='';
   };
   $('#clearTeamForm').onclick = ()=>{ $('#t_name').value=''; $('#t_phone').value=''; $('#t_email').value=''; };
 
+  // Nuovo To-Do
   $('#addTodoBtn').onclick = async ()=>{
     const addedFiles = await collectAndStoreFiles($('#todo_files'));
     addTodoFromForm();
-    await afterAddAttachRecent();
+    if(window._pendingFiles?.length || addedFiles.length){
+      if(state.todos[0]){
+        state.todos[0].files = [...(state.todos[0].files||[]), ...addedFiles, ...(window._pendingFiles||[])];
+        window._pendingFiles = [];
+        save(); render();
+      }
+    }
   };
   $('#clearTodoForm').onclick = ()=>{ $('#todo_title').value=''; $('#todo_due').value=''; $('#todo_info').value=''; $('#todo_assignee').value=''; $('#todo_files').value=''; };
 
-  // Filtri
+  // Ricerca + CSV
   const renderAll=()=>{ renderTodos(); renderDone(); kpis(); };
   $('#search').oninput=renderAll; $('#f_client').onchange=renderAll; $('#f_from').onchange=renderAll; $('#f_to').onchange=renderAll;
   $('#resetFilters').onclick=()=>{ $('#search').value=''; $('#f_client').value=''; $('#f_from').value=''; $('#f_to').value=''; renderAll(); };
+  $('#exportCSV').onclick=exportCSV;
 
   // Export/Import JSON
   $('#exportBtn').onclick=()=>{ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='anusual-flow-export.json'; a.click(); };
   $('#importBtn').onclick=()=>$('#importFile').click();
-  $('#importFile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ const data=JSON.parse(await f.text()); if(!data.clients||!data.todos||!data.done||!data.team) throw new Error('Formato non valido'); state=data; save(); render(); }catch(err){ alert('Import fallito: '+err.message); } };
+  $('#importFile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ const data=JSON.parse(await f.text()); if(!data.clients||!data.todos||!data.done||!data.team) throw new Error('Formato non valido'); state=data; save(); renderAll(); }catch(err){ alert('Import fallito: '+err.message); } };
 
-  // Test minimi (senza “ore”)
+  // Test minimi
   function runTests(){
     const out=[]; const assert=(name,cond)=>out.push(`${cond?'✅':'❌'} ${name}`);
     const a=uid(), b=uid(); assert('uid unici', a!==b);
     const prev=JSON.stringify(state); DB.set(state); const loaded=DB.get(); assert('persistenza', JSON.stringify(loaded)===JSON.stringify(state));
-    // filtro completati per periodo
-    const cid='c1'; const sample={clients:[{id:cid,name:'ACME'}], todos:[], done:[
-      {id:'d1',clientId:cid,title:'X',completedAt:'2025-08-01'},
-      {id:'d2',clientId:cid,title:'Y',completedAt:'2025-08-10'}
-    ], team:[]};
-    const keep=state; state=sample;
-    const inRange = sample.done.filter(w=> w.completedAt>='2025-08-05' && w.completedAt<='2025-08-31');
-    assert('filtro data completati', inRange.length===1 && inRange[0].id==='d2');
-    state=keep;
+    const cid='c1'; const sample={clients:[{id:cid,name:'ACME'}], todos:[], done:[{id:'d1',clientId:cid,title:'X',completedAt:'2025-08-01'},{id:'d2',clientId:cid,title:'Y',completedAt:'2025-08-10'}], team:[]};
+    const keep=state; state=sample; const inRange = sample.done.filter(w=> w.completedAt>='2025-08-05' && w.completedAt<='2025-08-31'); assert('filtro data completati', inRange.length===1 && inRange[0].id==='d2'); state=keep;
     alert(out.join('\n'));
   }
   document.getElementById('runTestsBtn').onclick=runTests;
 
-  // Persistenza + Render
+  // Persistenza + bootstrap
   function save(){ DB.set(state); kpis(); }
-  function render(){ renderClients(); renderTeam(); renderTodos(); renderDone(); kpis(); }
+  function render(){ refreshClientOptions(); refreshTeamOptions(); renderTodos(); renderDone(); kpis(); }
 
-  // Bootstrap iniziale (demo)
+  // Prima apertura: se loggato mostra app, altrimenti auth
+  if(session && currentUser()){ showAppUI(); } else { showAuthUI(); }
   if(state.clients.length===0){ state.clients.push({id:uid(), name:'Cliente Demo', contact:'demo@esempio.it', notes:'Esempio'}); }
   if(state.team.length===0){ state.team.push({id:uid(), name:'Creativo Demo', phone:'3931234567', email:'demo@esempio.it'}); }
-  refreshClientOptions(); refreshTeamOptions(); save(); render();
+  save(); render();
 
-  // Hardening: ignora eventuali errori MetaMask spurii
+  // Hardening: ignora errori MetaMask spurii
   if(typeof window!=='undefined' && !window.__mmHandled){
     window.__mmHandled=true;
     const handler = (reason)=>{ try{ const msg=String((reason&&(reason.message||reason))||''); return msg.includes('Failed to connect to MetaMask'); }catch{} return false; };
